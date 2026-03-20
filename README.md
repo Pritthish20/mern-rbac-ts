@@ -85,8 +85,7 @@ ADMIN_INVITE_CODE=your-admin-code
 
 Notes:
 
-- [backend\api\index.ts](d:\Projects\Revs\mern-rbac-ts\backend\api\index.ts) is the Vercel serverless entrypoint
-- [backend\vercel.json](d:\Projects\Revs\mern-rbac-ts\backend\vercel.json) rewrites all requests into the Express app
+- Vercel can deploy the Express app directly from [backend\src\app.ts](d:\Projects\Revs\mern-rbac-ts\backend\src\app.ts) with zero custom routing config
 - MongoDB connection reuse is enabled in [backend\src\config\db.ts](d:\Projects\Revs\mern-rbac-ts\backend\src\config\db.ts) for serverless deployments
 
 Frontend project root:
