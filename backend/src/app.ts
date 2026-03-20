@@ -3,6 +3,7 @@ import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
+import { NextFunction, Request, Response } from "express";
 import { connectDatabase } from "./config/db";
 import { env } from "./config/env";
 import { swaggerSpec } from "./docs/swagger";
@@ -46,7 +47,21 @@ app.get("/health", (_req, res) => {
   });
 });
 
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use(
+  "/api-docs",
+  (_req: Request, res: Response, next: NextFunction) => {
+    res.setHeader("Cache-Control", "no-store, max-age=0");
+    next();
+  },
+  swaggerUi.serveFiles(swaggerSpec),
+  swaggerUi.setup(swaggerSpec, {
+    explorer: true
+  })
+);
+app.get("/api-docs.json", (_req, res) => {
+  res.setHeader("Cache-Control", "no-store, max-age=0");
+  res.json(swaggerSpec);
+});
 app.use("/api/v1", apiRouter);
 
 app.use(notFoundHandler);
