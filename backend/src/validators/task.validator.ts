@@ -3,12 +3,12 @@ import { TASK_PRIORITY, TASK_STATUS } from "../models/task.model";
 import { sanitizeText } from "../utils/sanitize";
 
 const objectIdSchema = z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid resource id");
-const optionalDateSchema = z
-  .string()
-  .datetime({ offset: true })
-  .or(z.string().datetime())
-  .optional()
-  .or(z.literal(""));
+const isoDateSchema = z.string().datetime({ offset: true }).or(z.string().datetime());
+const localDateTimeSchema = z.string().regex(
+  /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?$/,
+  "Invalid datetime format"
+);
+const optionalDateSchema = isoDateSchema.or(localDateTimeSchema).optional().or(z.literal(""));
 
 export const taskIdParamSchema = z.object({
   params: z.object({

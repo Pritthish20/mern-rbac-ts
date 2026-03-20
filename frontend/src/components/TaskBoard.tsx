@@ -94,12 +94,13 @@ export function TaskBoard({ session, onLogout }: TaskBoardProps) {
 
     try {
       setLoading(true);
+      const normalizedDueDate = form.dueDate ? new Date(form.dueDate).toISOString() : "";
       const payload = {
         title: form.title,
         description: form.description,
         status: form.status,
         priority: form.priority,
-        dueDate: form.dueDate || undefined,
+        dueDate: normalizedDueDate,
         owner: session.user.role === "admin" && form.owner ? form.owner : undefined
       };
 
