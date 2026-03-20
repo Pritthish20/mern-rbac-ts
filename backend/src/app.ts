@@ -47,17 +47,20 @@ app.get("/health", (_req, res) => {
   });
 });
 
+const swaggerUiHandler = swaggerUi.setup(swaggerSpec, {
+  explorer: true
+});
+
 app.use(
   "/api-docs",
   (_req: Request, res: Response, next: NextFunction) => {
     res.setHeader("Cache-Control", "no-store, max-age=0");
     next();
   },
-  swaggerUi.serveFiles(swaggerSpec),
-  swaggerUi.setup(swaggerSpec, {
-    explorer: true
-  })
+  swaggerUi.serve
 );
+app.get("/api-docs", swaggerUiHandler);
+app.get("/api-docs/", swaggerUiHandler);
 app.get("/api-docs.json", (_req, res) => {
   res.setHeader("Cache-Control", "no-store, max-age=0");
   res.json(swaggerSpec);
