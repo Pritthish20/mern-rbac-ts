@@ -9,10 +9,19 @@ import { errorHandler, notFoundHandler } from "./middlewares/error.middleware";
 import { apiRouter } from "./routes";
 
 export const app = express();
+const allowedOrigins = env.CLIENT_ORIGIN.split(",").map((origin) => origin.trim()).filter(Boolean);
+
+app.set("trust proxy", 1);
 
 app.use(
   cors({
-    origin: env.CLIENT_ORIGIN,
+    origin(origin, callback) {
+      if (!origin || allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error("Origin not allowed by CORS"));
+    },
     credentials: true
   })
 );
@@ -33,3 +42,5 @@ app.use("/api/v1", apiRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);
+
+export default app;

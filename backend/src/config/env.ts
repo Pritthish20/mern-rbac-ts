@@ -10,6 +10,7 @@ const envSchema = z.object({
   JWT_SECRET: z.string().min(16, "JWT_SECRET must be at least 16 characters"),
   JWT_EXPIRES_IN: z.string().default("7d"),
   CLIENT_ORIGIN: z.string().default("http://localhost:5173"),
+  API_BASE_URL: z.string().default("http://localhost:5000"),
   ADMIN_INVITE_CODE: z.string().default("make-admin"),
   SEED_ADMIN_EMAIL: z.string().email().optional(),
   SEED_ADMIN_PASSWORD: z.string().min(8).optional(),

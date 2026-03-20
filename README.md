@@ -35,6 +35,7 @@ MONGODB_URI=mongodb://127.0.0.1:27017/mern_rbac_ts
 JWT_SECRET=change-this-secret
 JWT_EXPIRES_IN=7d
 CLIENT_ORIGIN=http://localhost:5173
+API_BASE_URL=http://localhost:5000
 ADMIN_INVITE_CODE=make-admin
 SEED_ADMIN_EMAIL=admin@example.com
 SEED_ADMIN_PASSWORD=Admin@123
@@ -59,6 +60,51 @@ Example frontend env:
 ```env
 VITE_API_URL=http://localhost:5000/api/v1
 ```
+
+## Vercel Deployment
+
+Deploy the frontend and backend as two separate Vercel projects.
+
+Backend project root:
+
+```text
+mern-rbac-ts/backend
+```
+
+Backend env vars:
+
+```env
+NODE_ENV=production
+MONGODB_URI=your-atlas-uri
+JWT_SECRET=your-production-secret
+JWT_EXPIRES_IN=7d
+CLIENT_ORIGIN=https://your-frontend-domain.vercel.app
+API_BASE_URL=https://your-backend-domain.vercel.app
+ADMIN_INVITE_CODE=your-admin-code
+```
+
+Notes:
+
+- [backend\api\index.ts](d:\Projects\Revs\mern-rbac-ts\backend\api\index.ts) is the Vercel serverless entrypoint
+- [backend\vercel.json](d:\Projects\Revs\mern-rbac-ts\backend\vercel.json) rewrites all requests into the Express app
+- MongoDB connection reuse is enabled in [backend\src\config\db.ts](d:\Projects\Revs\mern-rbac-ts\backend\src\config\db.ts) for serverless deployments
+
+Frontend project root:
+
+```text
+mern-rbac-ts/frontend
+```
+
+Frontend env vars:
+
+```env
+VITE_API_URL=https://your-backend-domain.vercel.app/api/v1
+```
+
+Notes:
+
+- [frontend\vercel.json](d:\Projects\Revs\mern-rbac-ts\frontend\vercel.json) rewrites all routes to `index.html`
+- Set backend `CLIENT_ORIGIN` to your deployed frontend URL so CORS allows requests
 
 ## Default Flow
 

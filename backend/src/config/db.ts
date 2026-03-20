@@ -3,9 +3,30 @@ import { env } from "./env";
 import { User } from "../models/user.model";
 import { ROLES } from "../constants/roles";
 
+declare global {
+  // Cache the connection promise between serverless invocations.
+  // eslint-disable-next-line no-var
+  var mongoosePromise: Promise<typeof mongoose> | undefined;
+}
+
 export async function connectDatabase() {
-  await mongoose.connect(env.MONGODB_URI);
+  if (mongoose.connection.readyState === 1) {
+    return mongoose;
+  }
+
+  if (!global.mongoosePromise) {
+    global.mongoosePromise = mongoose.connect(env.MONGODB_URI);
+  }
+
+  try {
+    await global.mongoosePromise;
+  } catch (error) {
+    global.mongoosePromise = undefined;
+    throw error;
+  }
+
   console.log("MongoDB connected");
+  return mongoose;
 }
 
 export async function seedDefaultAdmin() {

@@ -11,8 +11,8 @@ export const swaggerSpec = swaggerJsdoc({
     },
     servers: [
       {
-        url: `http://localhost:${env.PORT}`,
-        description: "Local development server"
+        url: env.API_BASE_URL,
+        description: env.NODE_ENV === "production" ? "Production server" : "Local development server"
       }
     ],
     tags: [
